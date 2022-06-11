@@ -1,4 +1,5 @@
 import express from 'express'
+import mongoose from 'mongoose'
 
 const server = express()
 
@@ -8,4 +9,15 @@ server.use((req, res) => {
   })
 })
 
-server.listen(8080)
+const startServer = async () => {
+  try {
+    await mongoose.connect(
+      'mongodb+srv://sdomianidze:4GMX680AWm6LMtQS@admin-panel-api.8bito.mongodb.net/admin-panel-api?retryWrites=true&w=majority'
+    )
+    server.listen(8080)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+startServer()
