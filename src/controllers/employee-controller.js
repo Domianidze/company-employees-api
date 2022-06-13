@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 import { Company, Employee } from '../models/index.js'
-import { postEmployeeSchema } from '../schemas/index.js'
+import { postEmployeeSchema, editEmployeeSchema } from '../schemas/index.js'
 
 export const getEmployees = async (req, res, next) => {
   try {
@@ -37,6 +37,31 @@ export const postEmployee = async (req, res, next) => {
 
     res.status(201).json({
       message: 'Employee added successfully',
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const editEmployee = async (req, res, next) => {
+  try {
+    await editEmployeeSchema.validateAsync(req.body)
+
+    const employee = await Employee.findOneAndUpdate(
+      {
+        _id: mongoose.Types.ObjectId(req.body.id),
+      },
+      req.body
+    )
+
+    if (!employee) {
+      const error = new Error('No employee found with this id')
+      error.statusCode = 404
+      throw error
+    }
+
+    res.status(201).json({
+      message: 'Employee updated successfully!',
     })
   } catch (err) {
     next(err)
