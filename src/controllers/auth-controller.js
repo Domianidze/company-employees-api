@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import 'dotenv/config'
 
 import { User } from '../models/index.js'
 import { authSchema } from '../schemas/index.js'
@@ -56,14 +57,14 @@ export const login = async (req, res, next) => {
         email: loadedUser.email,
         userId: loadedUser.id.toString(),
       },
-      '~5N2wZsiGkP;l_+BeK*{>)y"))C[fM',
-      { expiresIn: '1h' }
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
     )
 
     res.status(200).json({
       token,
       userId: loadedUser.id.toString(),
-      expiresIn: '1h',
+      expiresIn: process.env.JWT_EXPIRES_IN,
     })
   } catch (err) {
     next(err)

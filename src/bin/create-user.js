@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import prompt from 'prompt-async'
 import bcrypt from 'bcrypt'
+import 'dotenv/config'
 
 import { User } from '../models/index.js'
 
@@ -24,9 +25,7 @@ const createUser = async () => {
       throw new Error('password has to contain at least 3 characters')
     }
 
-    const database = await mongoose.connect(
-      'mongodb+srv://sdomianidze:4GMX680AWm6LMtQS@admin-panel-api.8bito.mongodb.net/main?retryWrites=true&w=majority'
-    )
+    const database = await mongoose.connect(process.env.MONGODB_CONNECT_URL)
 
     const existingUser = await User.findOne({ email })
     if (existingUser) {

@@ -1,6 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
+import 'dotenv/config'
 
 import { authRoutes } from './routes/index.js'
 
@@ -30,10 +31,8 @@ server.use((err, req, res, next) => {
 
 const startServer = async () => {
   try {
-    await mongoose.connect(
-      'mongodb+srv://sdomianidze:4GMX680AWm6LMtQS@admin-panel-api.8bito.mongodb.net/main?retryWrites=true&w=majority'
-    )
-    server.listen(8080)
+    await mongoose.connect(process.env.MONGODB_CONNECT_URL)
+    server.listen(process.env.SERVER_PORT)
   } catch (err) {
     console.error(err)
   }
