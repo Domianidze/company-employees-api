@@ -1,11 +1,33 @@
+import mongoose from 'mongoose'
+
 import { Company } from '../models/index.js'
-import { postCompanySchema } from '../schemas/index.js'
+import { getCompanySchema, postCompanySchema } from '../schemas/index.js'
 
 export const getCompanies = async (req, res, next) => {
   try {
     const companies = await Company.find().select('-__v')
 
     res.json(companies)
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const getCompany = async (req, res, next) => {
+  try {
+    await getCompanySchema.validateAsync(req.body)
+
+    const company = await Company.findById(
+      mongoose.Types.ObjectId(req.body.id)
+    ).select('-__v')
+
+    if (!company) {
+      const error = new Error('No company found with this id')
+      error.statusCode = 404
+      throw error
+    }
+
+    res.json(company)
   } catch (err) {
     next(err)
   }
