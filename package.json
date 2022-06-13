@@ -11,6 +11,7 @@
   "author": "Sandro Domianidzez",
   "license": "ISC",
   "dependencies": {
+    "@joi/date": "^2.1.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "dotenv": "^16.0.1",

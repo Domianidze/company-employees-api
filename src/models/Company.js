@@ -6,6 +6,7 @@ const companySchema = new Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
   },
   websiteUrl: {
     type: String,
