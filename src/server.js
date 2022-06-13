@@ -9,8 +9,8 @@ const server = express()
 
 server.use(bodyParser.json())
 
-server.use('/auth', authRoutes)
-server.use('/company', companyRoutes)
+server.use(authRoutes)
+server.use(companyRoutes)
 
 server.use((err, req, res, next) => {
   const error = err

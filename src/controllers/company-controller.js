@@ -1,6 +1,16 @@
 import { Company } from '../models/index.js'
 import { postCompanySchema } from '../schemas/index.js'
 
+export const getCompanies = async (req, res, next) => {
+  try {
+    const companies = await Company.find().select('-__v')
+
+    res.json(companies)
+  } catch (err) {
+    next(err)
+  }
+}
+
 export const postCompany = async (req, res, next) => {
   try {
     await postCompanySchema.validateAsync(req.body)
