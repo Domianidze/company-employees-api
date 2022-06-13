@@ -3,6 +3,16 @@ import mongoose from 'mongoose'
 import { Company, Employee } from '../models/index.js'
 import { postEmployeeSchema } from '../schemas/index.js'
 
+export const getEmployees = async (req, res, next) => {
+  try {
+    const employees = await Employee.find().select('-__v')
+
+    res.status(200).json(employees)
+  } catch (err) {
+    next(err)
+  }
+}
+
 export const postEmployee = async (req, res, next) => {
   try {
     await postEmployeeSchema.validateAsync(req.body)

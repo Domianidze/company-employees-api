@@ -1,8 +1,13 @@
 import express from 'express'
 
-import { postEmployee } from '../controllers/employee-controller.js'
+import {
+  getEmployees,
+  postEmployee,
+} from '../controllers/employee-controller.js'
 
 const Router = express.Router()
+
+Router.get('/employees', getEmployees)
 
 Router.post('/employee', postEmployee)
 
