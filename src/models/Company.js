@@ -24,6 +24,7 @@ const companySchema = new Schema({
     {
       employeeId: {
         type: Schema.Types.ObjectId,
+        ref: 'Employee',
         required: true,
       },
     },
