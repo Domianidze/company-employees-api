@@ -2,9 +2,9 @@ import mongoose from 'mongoose'
 
 import { Company } from '../models/index.js'
 import {
-  getCompanySchema,
   postCompanySchema,
   editCompanySchema,
+  findCompanySchema,
 } from '../schemas/index.js'
 
 export const getCompanies = async (req, res, next) => {
@@ -19,7 +19,7 @@ export const getCompanies = async (req, res, next) => {
 
 export const getCompany = async (req, res, next) => {
   try {
-    await getCompanySchema.validateAsync(req.body)
+    await findCompanySchema.validateAsync(req.body)
 
     const company = await Company.findById(
       mongoose.Types.ObjectId(req.body.id)
@@ -71,7 +71,12 @@ export const editCompany = async (req, res, next) => {
   try {
     await editCompanySchema.validateAsync(req.body)
 
-    const company = await Company.findById(mongoose.Types.ObjectId(req.body.id))
+    const company = await Company.findOneAndUpdate(
+      {
+        _id: mongoose.Types.ObjectId(req.body.id),
+      },
+      req.body
+    )
 
     if (!company) {
       const error = new Error('No company found with this id')
@@ -79,15 +84,32 @@ export const editCompany = async (req, res, next) => {
       throw error
     }
 
-    company.name = req.body.name || company.name
-    company.websiteUrl = req.body.websiteUrl || company.websiteUrl
-    company.logoUrl = req.body.logoUrl || company.logoUrl
-    company.foundedDate = req.body.foundedDate || company.foundedDate
-
     await company.save()
 
     res.status(201).json({
       message: 'Company updated successfully!',
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const deleteCompany = async (req, res, next) => {
+  try {
+    await findCompanySchema.validateAsync(req.body)
+
+    const company = await Company.findByIdAndRemove(
+      mongoose.Types.ObjectId(req.body.id)
+    )
+
+    if (!company) {
+      const error = new Error('No company found with this id')
+      error.statusCode = 404
+      throw error
+    }
+
+    res.json({
+      message: 'Company deleted successfully!',
     })
   } catch (err) {
     next(err)
