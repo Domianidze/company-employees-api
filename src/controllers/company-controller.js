@@ -1,7 +1,11 @@
 import mongoose from 'mongoose'
 
 import { Company } from '../models/index.js'
-import { getCompanySchema, postCompanySchema } from '../schemas/index.js'
+import {
+  getCompanySchema,
+  postCompanySchema,
+  editCompanySchema,
+} from '../schemas/index.js'
 
 export const getCompanies = async (req, res, next) => {
   try {
@@ -37,7 +41,9 @@ export const postCompany = async (req, res, next) => {
   try {
     await postCompanySchema.validateAsync(req.body)
 
-    const existingCompany = await Company.findOne({ name: req.body.name })
+    const existingCompany = await Company.findById(
+      mongoose.Types.ObjectId(req.body.id)
+    )
     if (existingCompany) {
       const error = new Error('A company with this name already exists.')
       error.statusCode = 422
@@ -55,6 +61,33 @@ export const postCompany = async (req, res, next) => {
     res.status(201).json({
       message: 'Company created successfully!',
       companyId: response._id,
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const editCompany = async (req, res, next) => {
+  try {
+    await editCompanySchema.validateAsync(req.body)
+
+    const company = await Company.findById(mongoose.Types.ObjectId(req.body.id))
+
+    if (!company) {
+      const error = new Error('No company found with this id')
+      error.statusCode = 404
+      throw error
+    }
+
+    company.name = req.body.name || company.name
+    company.websiteUrl = req.body.websiteUrl || company.websiteUrl
+    company.logoUrl = req.body.logoUrl || company.logoUrl
+    company.foundedDate = req.body.foundedDate || company.foundedDate
+
+    await company.save()
+
+    res.status(201).json({
+      message: 'Company updated successfully!',
     })
   } catch (err) {
     next(err)
