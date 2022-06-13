@@ -9,9 +9,14 @@ import {
 
 export const getCompanies = async (req, res, next) => {
   try {
-    const companies = await Company.find().select('-__v')
+    const companies = await Company.find()
+      .select('-__v')
+      .populate({
+        path: 'employees.employeeId',
+        select: ['-companyId', '-__v'],
+      })
 
-    res.json(companies)
+    res.status(200).json(companies)
   } catch (err) {
     next(err)
   }
@@ -31,7 +36,7 @@ export const getCompany = async (req, res, next) => {
       throw error
     }
 
-    res.json(company)
+    res.status(200).json(company)
   } catch (err) {
     next(err)
   }
@@ -51,10 +56,7 @@ export const postCompany = async (req, res, next) => {
     }
 
     const response = await Company.create({
-      name: req.body.name,
-      websiteUrl: req.body.websiteUrl,
-      logoUrl: req.body.logoUrl,
-      foundedDate: req.body.foundedDate,
+      ...req.body,
       employees: [],
     })
 
@@ -108,7 +110,7 @@ export const deleteCompany = async (req, res, next) => {
       throw error
     }
 
-    res.json({
+    res.status(200).json({
       message: 'Company deleted successfully!',
     })
   } catch (err) {

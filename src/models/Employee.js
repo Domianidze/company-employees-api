@@ -19,20 +19,18 @@ const employeeSchema = new Schema({
     type: Number,
     required: true,
   },
-  company: {
-    id: {
-      type: String,
-      ref: 'Company',
-      required: true,
-    },
-    position: {
-      type: String,
-      required: true,
-    },
-    startedWorkingDate: {
-      type: String,
-      required: true,
-    },
+  companyId: {
+    type: String,
+    ref: 'Company',
+    required: true,
+  },
+  position: {
+    type: String,
+    required: true,
+  },
+  startedWorkingDate: {
+    type: String,
+    required: true,
   },
 })
 

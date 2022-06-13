@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import 'dotenv/config'
 
-import { authRoutes, companyRoutes } from './routes/index.js'
+import { authRoutes, companyRoutes, employeeRoutes } from './routes/index.js'
 
 const server = express()
 
@@ -11,6 +11,7 @@ server.use(bodyParser.json())
 
 server.use(authRoutes)
 server.use(companyRoutes)
+server.use(employeeRoutes)
 
 server.use((err, req, res, next) => {
   const error = err

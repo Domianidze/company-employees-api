@@ -17,14 +17,14 @@ export const register = async (req, res, next) => {
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 12)
 
-    const response = await User.create({
+    const user = await User.create({
       email: req.body.email,
       password: hashedPassword,
     })
 
     res.status(201).json({
       message: 'Registered successfully!',
-      userId: response._id,
+      userId: user._id,
     })
   } catch (err) {
     next(err)

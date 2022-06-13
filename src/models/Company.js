@@ -27,6 +27,7 @@ const companySchema = new Schema({
         ref: 'Employee',
         required: true,
       },
+      _id: false,
     },
   ],
 })
