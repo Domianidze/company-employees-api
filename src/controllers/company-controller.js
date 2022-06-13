@@ -4,17 +4,12 @@ import { Company } from '../models/index.js'
 import {
   postCompanySchema,
   editCompanySchema,
-  findCompanySchema,
+  findDocumentSchema,
 } from '../schemas/index.js'
 
 export const getCompanies = async (req, res, next) => {
   try {
-    const companies = await Company.find()
-      .select('-__v')
-      .populate({
-        path: 'employees.employeeId',
-        select: ['-companyId', '-__v'],
-      })
+    const companies = await Company.find().select('-__v')
 
     res.status(200).json(companies)
   } catch (err) {
@@ -24,11 +19,14 @@ export const getCompanies = async (req, res, next) => {
 
 export const getCompany = async (req, res, next) => {
   try {
-    await findCompanySchema.validateAsync(req.body)
+    await findDocumentSchema.validateAsync(req.body)
 
-    const company = await Company.findById(
-      mongoose.Types.ObjectId(req.body.id)
-    ).select('-__v')
+    const company = await Company.findById(mongoose.Types.ObjectId(req.body.id))
+      .select('-__v')
+      .populate({
+        path: 'employees.employeeId',
+        select: ['-companyId', '-__v'],
+      })
 
     if (!company) {
       const error = new Error('No company found with this id')
@@ -98,7 +96,7 @@ export const editCompany = async (req, res, next) => {
 
 export const deleteCompany = async (req, res, next) => {
   try {
-    await findCompanySchema.validateAsync(req.body)
+    await findDocumentSchema.validateAsync(req.body)
 
     const company = await Company.findByIdAndRemove(
       mongoose.Types.ObjectId(req.body.id)
