@@ -11,6 +11,7 @@
   "author": "Sandro Domianidzez",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^7.2.0",
     "@joi/date": "^2.1.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
@@ -19,7 +20,9 @@
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.6",
-    "prompt-async": "^0.9.9"
+    "prompt-async": "^0.9.9",
+    "swagger-ui-express": "^4.4.0",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "eslint": "^8.17.0",

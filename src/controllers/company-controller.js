@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 import { Company, Employee } from '../models/index.js'
 import {
-  postCompanySchema,
+  addCompanySchema,
   editCompanySchema,
   findDocumentSchema,
 } from '../schemas/index.js'
@@ -40,9 +40,9 @@ export const getCompany = async (req, res, next) => {
   }
 }
 
-export const postCompany = async (req, res, next) => {
+export const addCompany = async (req, res, next) => {
   try {
-    await postCompanySchema.validateAsync(req.body)
+    await addCompanySchema.validateAsync(req.body)
 
     const existingCompany = await Company.findOne({ name: req.body.name })
 

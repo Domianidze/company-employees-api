@@ -4,7 +4,11 @@ import bodyParser from 'body-parser'
 import 'dotenv/config'
 
 import { authRoutes, companyRoutes, employeeRoutes } from './routes/index.js'
-import { corsMiddleware, errorMiddleware } from './middleware/index.js'
+import {
+  corsMiddleware,
+  errorMiddleware,
+  swaggerMiddleware,
+} from './middleware/index.js'
 
 const server = express()
 
@@ -17,6 +21,8 @@ server.use(companyRoutes)
 server.use(employeeRoutes)
 
 server.use(errorMiddleware)
+
+server.use(swaggerMiddleware())
 
 const startServer = async () => {
   try {

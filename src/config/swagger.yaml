@@ -1,0 +1,698 @@
+openapi: 3.0.0
+info:
+  title: Admin Panel API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: local server
+  - url: 
+    description: production server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /register:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            example:
+                email: test@test.com
+                password: test123
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  required: true
+                password:
+                  type: string
+                  required: true
+      responses:
+        '201':
+          description: Registered successfully!
+          content:
+            application/json:
+              example:
+                message: Registered successfully!
+                userId: '62a48d48d2c36b37241a8f5b'
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+                  userId:
+                    type: string
+                    required: true
+        '422':
+          description: Email is already taken!
+          content:
+            application/json:
+              example:
+                message: Email is already taken!
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+  /login:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            example:
+                email: test@test.com
+                password: test123
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  required: true
+                password:
+                  type: string
+                  required: true
+      responses:
+        '200':
+          description: Logged in successfully!
+          content:
+            application/json:
+              example:
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJ1c2VySWQiOiI2MmE0OGQ0OGQyYzM2YjM3MjQxYThmNWIiLCJpYXQiOjE2NTUyMzIzMjQsImV4cCI6MTY1NTIzNTkyNH0.VG9OmL4PLbeR2oGMTmhAFd09Sn4OTmaC6T9sXiwWXdA
+                userId: '62a48d48d2c36b37241a8f5b'
+                expiresIn: 1h
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    required: true
+                  userId:
+                    type: string
+                    required: true
+                  expiresIn:
+                    type: string
+                    required: true
+        '401':
+          description: Invalid password.
+          content:
+            application/json:
+              example:
+                message: Invalid password.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+        '404':
+          description: User with this email doesn't exist.
+          content:
+            application/json:
+              example:
+                message: User with this email doesn't exist.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+  /get-companies:
+    get:
+      tags:
+        - Company
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Get companies successfully!
+          content:
+            application/json:
+              example:
+                  - _id: 62a86e06451633b832d24238
+                    name: google
+                    websiteUrl: https://www.google.com/
+                    logoUrl: https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png
+                    foundedDate: 04/09/1998
+                    employees:
+                      - employeeId: 62a86e0f451633b832d2423c
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      required: true
+                    name:
+                      type: string
+                      required: true
+                    websiteUrl:
+                      type: string
+                      required: true
+                    logoUrl:
+                      type: string
+                      required: true
+                    foundedDate:
+                      type: string
+                      required: true
+  /get-company:
+    post:
+      tags:
+        - Company
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              id: 62a86e06451633b832d24238
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  required: true
+      responses:
+        '200':
+          description: Get company successfully!
+          content:
+            application/json:
+              example:
+                - _id: 62a86e06451633b832d24238
+                  name: google
+                  websiteUrl: https://www.google.com/
+                  logoUrl: https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png
+                  foundedDate: 04/09/1998
+                  employees:
+                    - employeeId: 
+                        _id: 62a86e0f451633b832d2423c
+                        firstName: Doe
+                        lastName: John
+                        dateOfBirth: 01/01/1995
+                        idNumber: 123456789
+                        position: Developer
+                        startedWorkingDate: 01/01/2000
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    required: true
+                  name:
+                    type: string
+                    required: true
+                  websiteUrl:
+                    type: string
+                    required: true
+                  logoUrl:
+                    type: string
+                    required: true
+                  foundedDate:
+                    type: string
+                    required: true
+        '404':
+          description: No company found with this id.
+          content:
+            application/json:
+              example:
+                message: No company found with this id.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+  /add-company:
+    post:
+      tags:
+        - Company
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              name: google
+              websiteUrl: https://www.google.com/
+              logoUrl: https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png
+              foundedDate: 04/09/1998
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  required: true
+                websiteUrl:
+                  type: string
+                  required: true
+                logoUrl:
+                  type: string
+                  required: true
+                foundedDate:
+                  type: string
+                  required: true
+      responses:
+        '201':
+          description: Company created successfully!
+          content:
+            application/json:
+              example:
+                message: Company created successfully!
+                companyId: 62a86e06451633b832d24238
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+                  companyId:
+                    type: string
+                    required: true
+        '422':
+          description: A company with this name already exists.
+          content:
+            application/json:
+              example:
+                message: A company with this name already exists.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+  /edit-company:
+    put:
+      tags:
+        - Company
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              id: 62a86e06451633b832d24238
+              name: google
+              websiteUrl: https://www.google.com/
+              logoUrl: https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png
+              foundedDate: 04/09/1998
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  required: true
+                name:
+                  type: string
+                websiteUrl:
+                  type: string
+                logoUrl:
+                  type: string
+                foundedDate:
+                  type: string
+      responses:
+        '201':
+          description: Company updated successfully!
+          content:
+            application/json:
+              example:
+                message: Company updated successfully!
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+        '404':
+          description: No company found with this id.
+          content:
+            application/json:
+              example:
+                message: No company found with this id.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+  /delete-company:
+    delete:
+      tags:
+        - Company
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              id: 62a86e06451633b832d24238
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  required: true
+      responses:
+        '200':
+          description: 'Company deleted successfully!'
+          content:
+            application/json:
+              example:
+                message: Company deleted successfully!.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+        '404':
+          description: No company found with this id.
+          content:
+            application/json:
+              example:
+                message: No company found with this id.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+  /get-employees:
+    get:
+      tags:
+        - Employee
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Get employees successfully!
+          content:
+            application/json:
+              example:
+                  - _id: 62a86e0f451633b832d2423c
+                    firstName: John
+                    lastName: Doe
+                    dateOfBirth: 01/01/1995
+                    idNumber: 123456789
+                    companyId: 62a86e06451633b832d24238
+                    position: Developer
+                    startedWorkingDate: 01/01/2000
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      required: true
+                    firstName:
+                      type: string
+                      required: true
+                    lastName:
+                      type: string
+                      required: true
+                    dateOfBirth:
+                      type: string
+                      required: true
+                    idNumber:
+                      type: number
+                      required: true
+                    companyId:
+                      type: string
+                      required: true
+                    position:
+                      type: string
+                      required: true
+                    startedWorkingDate:
+                      type: string
+                      required: true
+  /get-employee:
+    post:
+      tags:
+        - Employee
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              id: 62a86e06451633b832d24238
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  required: true
+      responses:
+        '200':
+          description: Get employee successfully!
+          content:
+            application/json:
+              example:
+                  _id: 62a86e0f451633b832d2423c
+                  firstName: John
+                  lastName: Doe
+                  dateOfBirth: 01/01/1995
+                  idNumber: 123456789
+                  companyId: 
+                      _id: 62a86e06451633b832d24238
+                      name: google
+                      websiteUrl: https://www.google.com/
+                      logoUrl: https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png
+                      foundedDate: 04/09/1998
+                  position: Developer
+                  startedWorkingDate: 01/01/2000
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    required: true
+                  firstName:
+                    type: string
+                    required: true
+                  lastName:
+                    type: string
+                    required: true
+                  dateOfBirth:
+                    type: string
+                    required: true
+                  idNumber:
+                    type: number
+                    required: true
+                  companyId:
+                    type: array
+                    required: true
+                  position:
+                    type: string
+                    required: true
+                  startedWorkingDate:
+                    type: string
+                    required: true
+        '404':
+          description: No employee found with this id.
+          content:
+            application/json:
+              example:
+                message: No employee found with this id.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+  /add-employee:
+    post:
+      tags:
+        - Employee
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              firstName: John
+              lastName: Doe
+              dateOfBirth: 01/01/1995
+              idNumber: 123456789
+              companyId: 62a86e06451633b832d24238
+              position: Developer
+              startedWorkingDate: 01/01/2000
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  required: true
+                lastName:
+                  type: string
+                  required: true
+                dateOfBirth:
+                  type: string
+                  required: true
+                idNumber:
+                  type: number
+                  required: true
+                companyId:
+                  type: string
+                  required: true
+                position:
+                  type: string
+                  required: true
+                startedWorkingDate:
+                  type: string
+                  required: true
+      responses:
+        '201':
+          description: Employee created successfully!
+          content:
+            application/json:
+              example:
+                message: Employee created successfully!
+                employeeId: 62a86e06451633b832d24238
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+                  employeeId:
+                    type: string
+                    required: true
+        '404':
+          description: No company found with this id.
+          content:
+            application/json:
+              example:
+                message: No company found with this id.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+        '422':
+          description: A employee with this name already exists.
+          content:
+            application/json:
+              example:
+                message: A employee with this name already exists.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+  /edit-employee:
+    put:
+      tags:
+        - Employee
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              id: 62a86e0f451633b832d2423c
+              firstName: John
+              lastName: Doe
+              dateOfBirth: 01/01/1995
+              idNumber: 123456789
+              position: Developer
+              startedWorkingDate: 01/01/2000
+            schema:
+              type: object
+              properties:
+                _id:
+                  type: string
+                  required: true
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                dateOfBirth:
+                  type: string
+                idNumber:
+                  type: number
+                position:
+                  type: string
+                startedWorkingDate:
+                  type: string
+      responses:
+        '201':
+          description: Employee updated successfully!
+          content:
+            application/json:
+              example:
+                message: Employee updated successfully!
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+        '404':
+          description: No employee found with this id.
+          content:
+            application/json:
+              example:
+                message: No employee found with this id.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+  /delete-employee:
+    delete:
+      tags:
+        - Employee
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              id: 62a86e06451633b832d24238
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  required: true
+      responses:
+        '200':
+          description: 'Employee deleted successfully!'
+          content:
+            application/json:
+              example:
+                message: Employee deleted successfully!.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true
+        '404':
+          description: No employee found with this id.
+          content:
+            application/json:
+              example:
+                message: No employee found with this id.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    required: true

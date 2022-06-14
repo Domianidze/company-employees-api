@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 import { Company, Employee } from '../models/index.js'
 import {
-  postEmployeeSchema,
+  addEmployeeSchema,
   editEmployeeSchema,
   findDocumentSchema,
 } from '../schemas/index.js'
@@ -42,9 +42,9 @@ export const getEmployee = async (req, res, next) => {
   }
 }
 
-export const postEmployee = async (req, res, next) => {
+export const addEmployee = async (req, res, next) => {
   try {
-    await postEmployeeSchema.validateAsync(req.body)
+    await addEmployeeSchema.validateAsync(req.body)
 
     const existingEmployee = await Employee.findOne({
       idNumber: req.body.idNumber,

@@ -39,10 +39,12 @@ export const login = async (req, res, next) => {
       error.statusCode = 404
       throw error
     }
+
     const correctPassword = await bcrypt.compare(
       req.body.password,
       loadedUser.password
     )
+
     if (!correctPassword) {
       const error = new Error('Invalid password.')
       error.statusCode = 401

@@ -1,6 +1,6 @@
 export { default as authSchema } from './auth-schema.js'
-export { default as postCompanySchema } from './post-company-schema.js'
+export { default as addCompanySchema } from './add-company-schema.js'
 export { default as editCompanySchema } from './edit-company-schema.js'
-export { default as postEmployeeSchema } from './post-employee-schema.js'
+export { default as addEmployeeSchema } from './add-employee-schema.js'
 export { default as editEmployeeSchema } from './edit-employee-schema.js'
 export { default as findDocumentSchema } from './find-document-schema.js'
