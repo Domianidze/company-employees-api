@@ -18,6 +18,7 @@ const employeeSchema = new Schema({
   idNumber: {
     type: Number,
     required: true,
+    unique: true,
   },
   companyId: {
     type: String,

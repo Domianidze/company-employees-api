@@ -46,6 +46,16 @@ export const postEmployee = async (req, res, next) => {
   try {
     await postEmployeeSchema.validateAsync(req.body)
 
+    const existingEmployee = await Employee.findOne({
+      idNumber: req.body.idNumber,
+    })
+
+    if (existingEmployee) {
+      const error = new Error('Employee with this id number already exists.')
+      error.statusCode = 422
+      throw error
+    }
+
     const company = await Company.findById(
       mongoose.Types.ObjectId(req.body.companyId)
     )
@@ -66,6 +76,7 @@ export const postEmployee = async (req, res, next) => {
 
     res.status(201).json({
       message: 'Employee added successfully',
+      employeeId: employee._id,
     })
   } catch (err) {
     next(err)
@@ -91,6 +102,41 @@ export const editEmployee = async (req, res, next) => {
 
     res.status(201).json({
       message: 'Employee updated successfully!',
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const deleteEmployee = async (req, res, next) => {
+  try {
+    await findDocumentSchema.validateAsync(req.body)
+
+    const employee = await Employee.findByIdAndRemove(
+      mongoose.Types.ObjectId(req.body.id)
+    )
+
+    if (!employee) {
+      const error = new Error('No employee found with this id.')
+      error.statusCode = 404
+      throw error
+    }
+
+    const company = await Company.findOne({
+      employees: { employeeId: employee.id },
+    })
+
+    const updatedEmployees = company.employees.filter(
+      (oldEmployee) =>
+        oldEmployee.employeeId.toString() !== employee.id.toString()
+    )
+
+    company.employees = updatedEmployees
+
+    await company.save()
+
+    res.status(200).json({
+      message: 'Employee deleted successfully!',
     })
   } catch (err) {
     next(err)

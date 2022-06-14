@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-import { Company } from '../models/index.js'
+import { Company, Employee } from '../models/index.js'
 import {
   postCompanySchema,
   editCompanySchema,
@@ -44,9 +44,8 @@ export const postCompany = async (req, res, next) => {
   try {
     await postCompanySchema.validateAsync(req.body)
 
-    const existingCompany = await Company.findById(
-      mongoose.Types.ObjectId(req.body.id)
-    )
+    const existingCompany = await Company.findOne({ name: req.body.name })
+
     if (existingCompany) {
       const error = new Error('A company with this name already exists.')
       error.statusCode = 422
@@ -107,6 +106,8 @@ export const deleteCompany = async (req, res, next) => {
       error.statusCode = 404
       throw error
     }
+
+    await Employee.deleteMany({ companyId: company._id })
 
     res.status(200).json({
       message: 'Company deleted successfully!',
