@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import 'dotenv/config'
 
 import { authRoutes, companyRoutes, employeeRoutes } from './routes/index.js'
+import { errorMiddleware } from './middleware/index.js'
 
 const server = express()
 
@@ -13,23 +14,7 @@ server.use(authRoutes)
 server.use(companyRoutes)
 server.use(employeeRoutes)
 
-server.use((err, req, res, next) => {
-  const error = err
-
-  if (error.isJoi) {
-    error.statusCode = 422
-  }
-
-  if (!error.statusCode) {
-    error.statusCode = 500
-  }
-
-  res.status(error.statusCode).json({
-    message: error.message,
-  })
-
-  next()
-})
+server.use(errorMiddleware)
 
 const startServer = async () => {
   try {

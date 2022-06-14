@@ -1,5 +1,6 @@
 import express from 'express'
 
+import { authMiddleware } from '../middleware/index.js'
 import {
   getEmployees,
   getEmployee,
@@ -10,14 +11,14 @@ import {
 
 const Router = express.Router()
 
-Router.get('/employees', getEmployees)
+Router.get('/employees', authMiddleware, getEmployees)
 
-Router.get('/employee', getEmployee)
+Router.get('/employee', authMiddleware, getEmployee)
 
-Router.post('/employee', postEmployee)
+Router.post('/employee', authMiddleware, postEmployee)
 
-Router.post('/edit-employee', editEmployee)
+Router.post('/edit-employee', authMiddleware, editEmployee)
 
-Router.post('/delete-employee', deleteEmployee)
+Router.post('/delete-employee', authMiddleware, deleteEmployee)
 
 export default Router

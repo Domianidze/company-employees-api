@@ -1,7 +1,5 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import 'dotenv/config'
-
 import { User } from '../models/index.js'
 import { authSchema } from '../schemas/index.js'
 
@@ -46,7 +44,7 @@ export const login = async (req, res, next) => {
       loadedUser.password
     )
     if (!correctPassword) {
-      const error = new Error('Invalid Password')
+      const error = new Error('Invalid password.')
       error.statusCode = 401
       throw error
     }

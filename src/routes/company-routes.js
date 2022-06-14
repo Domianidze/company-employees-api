@@ -1,5 +1,6 @@
 import express from 'express'
 
+import { authMiddleware } from '../middleware/index.js'
 import {
   getCompanies,
   getCompany,
@@ -10,14 +11,14 @@ import {
 
 const Router = express.Router()
 
-Router.get('/companies', getCompanies)
+Router.get('/companies', authMiddleware, getCompanies)
 
-Router.get('/company', getCompany)
+Router.get('/company', authMiddleware, getCompany)
 
-Router.post('/company', postCompany)
+Router.post('/company', authMiddleware, postCompany)
 
-Router.post('/edit-company', editCompany)
+Router.post('/edit-company', authMiddleware, editCompany)
 
-Router.post('/delete-company', deleteCompany)
+Router.post('/delete-company', authMiddleware, deleteCompany)
 
 export default Router
