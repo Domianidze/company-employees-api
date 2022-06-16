@@ -10,6 +10,8 @@ import {
   swaggerMiddleware,
 } from './middleware/index.js'
 
+import { getMongoUrl } from './util/index.js'
+
 const server = express()
 
 server.use(bodyParser.json())
@@ -26,7 +28,7 @@ server.use(swaggerMiddleware())
 
 const startServer = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_CONNECT_URL)
+    await mongoose.connect(getMongoUrl())
     server.listen(process.env.SERVER_PORT)
   } catch (err) {
     console.error(err)

@@ -5,6 +5,8 @@ import 'dotenv/config'
 
 import { User } from '../models/index.js'
 
+import { getMongoUrl } from '../util/index.js'
+
 const createUser = async () => {
   try {
     prompt.start()
@@ -25,7 +27,7 @@ const createUser = async () => {
       throw new Error('password has to contain at least 3 characters')
     }
 
-    const database = await mongoose.connect(process.env.MONGODB_CONNECT_URL)
+    const database = await mongoose.connect(getMongoUrl())
 
     const existingUser = await User.findOne({ email })
     if (existingUser) {
