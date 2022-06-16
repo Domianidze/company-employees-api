@@ -1,6 +1,7 @@
 ## Admin Panel Api
  
-Admin Panel Api - is an Api where you can add / modify / read / delete companies and their employees.
+Admin Panel Api - is an api where you can add / modify / read / delete companies and their employees.
+You can visit the production version [here!](https://employee-companies-api.sandro.redberryinternship.ge/)
 
 ### Table of Contents
 
