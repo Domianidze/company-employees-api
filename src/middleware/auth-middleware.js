@@ -1,13 +1,13 @@
 import jwt from 'jsonwebtoken'
 
-export default (req, res, next) => {
+export default (req, _res, next) => {
   try {
     const { authorization } = req.headers
 
     if (!authorization) {
       const err = new Error('Please provide a Bearer token.')
       err.statusCode = 401
-      next(err)
+      throw err
     }
 
     const [, token] = authorization.split(' ')
@@ -15,7 +15,7 @@ export default (req, res, next) => {
     if (!token) {
       const err = new Error('Please provide a valid Bearer token.')
       err.statusCode = 401
-      next(err)
+      throw err
     }
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET)

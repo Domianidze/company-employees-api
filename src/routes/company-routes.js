@@ -1,24 +1,23 @@
 import express from 'express'
 
-import { authMiddleware } from '../middleware/index.js'
 import {
   getCompanies,
   getCompany,
   addCompany,
   editCompany,
   deleteCompany,
-} from '../controllers/company-controller.js'
+} from '../controllers/index.js'
 
 const Router = express.Router()
 
-Router.get('/get-companies', authMiddleware, getCompanies)
+Router.get('/get-companies', getCompanies)
 
-Router.post('/get-company', authMiddleware, getCompany)
+Router.post('/get-company', getCompany)
 
-Router.post('/add-company', authMiddleware, addCompany)
+Router.post('/add-company', addCompany)
 
-Router.put('/edit-company', authMiddleware, editCompany)
+Router.put('/edit-company', editCompany)
 
-Router.delete('/delete-company', authMiddleware, deleteCompany)
+Router.delete('/delete-company', deleteCompany)
 
 export default Router

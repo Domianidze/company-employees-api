@@ -20,7 +20,7 @@ const employeeSchema = new Schema({
     required: true,
     unique: true,
   },
-  companyId: {
+  company: {
     type: String,
     ref: 'Company',
     required: true,

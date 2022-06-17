@@ -9,7 +9,12 @@ import {
 
 export const getEmployees = async (req, res, next) => {
   try {
-    const employees = await Employee.find().select('-__v')
+    const employees = await Employee.find()
+      .select('-__v')
+      .populate({
+        path: 'company',
+        select: ['-employees', '-__v'],
+      })
 
     res.status(200).json(employees)
   } catch (err) {
@@ -26,7 +31,7 @@ export const getEmployee = async (req, res, next) => {
     )
       .select('-__v')
       .populate({
-        path: 'companyId',
+        path: 'company',
         select: ['-employees', '-__v'],
       })
 
@@ -66,10 +71,18 @@ export const addEmployee = async (req, res, next) => {
       throw error
     }
 
-    const employee = await Employee.create(req.body)
+    const employee = await Employee.create({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      dateOfBirth: req.body.dateOfBirth,
+      idNumber: req.body.idNumber,
+      company: req.body.companyId,
+      position: req.body.position,
+      startedWorkingDate: req.body.startedWorkingDate,
+    })
 
     company.employees.push({
-      employeeId: employee._id,
+      employee: employee._id,
     })
 
     await company.save()

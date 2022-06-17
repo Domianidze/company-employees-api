@@ -11,21 +11,20 @@ const createUser = async () => {
   try {
     prompt.start()
 
-    const { email, password } = await prompt.get(['email', 'password'])
-
-    const emailIsValid = email.match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    )
-
-    const passwordIsValid = password.length > 3
-
-    if (!emailIsValid) {
-      throw new Error('email has to be valid')
-    }
-
-    if (!passwordIsValid) {
-      throw new Error('password has to contain at least 3 characters')
-    }
+    const { email, password } = await prompt.get({
+      properties: {
+        email: {
+          pattern:
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          message: 'email has to be valid',
+        },
+        password: {
+          minLength: 3,
+          message: 'password has to contain at least 3 characters',
+          hidden: true,
+        },
+      },
+    })
 
     const database = await mongoose.connect(getMongoUrl())
 

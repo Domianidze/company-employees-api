@@ -1,4 +1,4 @@
-export default (err, req, res, next) => {
+export default (err, _req, _res) => {
   const error = err
 
   if (error.isJoi) {
@@ -9,7 +9,7 @@ export default (err, req, res, next) => {
     error.statusCode = 500
   }
 
-  res.status(error.statusCode).json({
+  _res.status(error.statusCode).json({
     message: error.message,
   })
 }

@@ -22,7 +22,7 @@ const companySchema = new Schema({
   },
   employees: [
     {
-      employeeId: {
+      employee: {
         type: Schema.Types.ObjectId,
         ref: 'Employee',
         required: true,

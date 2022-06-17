@@ -9,7 +9,12 @@ import {
 
 export const getCompanies = async (req, res, next) => {
   try {
-    const companies = await Company.find().select('-__v')
+    const companies = await Company.find()
+      .select('-__v')
+      .populate({
+        path: 'employees.employee',
+        select: ['-companyId', '-__v'],
+      })
 
     res.status(200).json(companies)
   } catch (err) {
@@ -24,7 +29,7 @@ export const getCompany = async (req, res, next) => {
     const company = await Company.findById(mongoose.Types.ObjectId(req.body.id))
       .select('-__v')
       .populate({
-        path: 'employees.employeeId',
+        path: 'employees.employee',
         select: ['-companyId', '-__v'],
       })
 

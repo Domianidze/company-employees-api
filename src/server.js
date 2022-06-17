@@ -6,6 +6,7 @@ import 'dotenv/config'
 import { authRoutes, companyRoutes, employeeRoutes } from './routes/index.js'
 import {
   corsMiddleware,
+  authMiddleware,
   errorMiddleware,
   swaggerMiddleware,
 } from './middleware/index.js'
@@ -18,13 +19,13 @@ server.use(bodyParser.json())
 
 server.use(corsMiddleware)
 
+server.use('/api-docs', swaggerMiddleware())
+
 server.use(authRoutes)
-server.use(companyRoutes)
-server.use(employeeRoutes)
+server.use(authMiddleware, companyRoutes)
+server.use(authMiddleware, employeeRoutes)
 
 server.use(errorMiddleware)
-
-server.use(swaggerMiddleware())
 
 const startServer = async () => {
   try {
