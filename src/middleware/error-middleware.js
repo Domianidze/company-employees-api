@@ -1,4 +1,5 @@
-export default (err, _req, _res) => {
+// eslint-disable-next-line no-unused-vars
+export default (err, _req, res, _next) => {
   const error = err
 
   if (error.isJoi) {
@@ -9,7 +10,7 @@ export default (err, _req, _res) => {
     error.statusCode = 500
   }
 
-  _res.status(error.statusCode).json({
+  res.status(error.statusCode).json({
     message: error.message,
   })
 }
