@@ -1,18 +1,15 @@
+const { env } = process
+
+const isAtlas = () => env.MONGO_PROTOCOL === 'mongodb+srv'
+
+const generateAtlasUrl = () =>
+  `mongodb+srv://${env.MONGO_USER}:${env.MONGO_PASSWORD}@${env.MONGO_HOST}/${env.MONGO_DATABASE}`
+
+const generateLocalUrl = () =>
+  `mongodb://${env.MONGO_HOST}:${env.MONGO_PORT}/${env.MONGO_DATABASE}`
+
 export default () => {
-  const { env } = process
-  const protocol = env.MONGO_PROTOCOL
+  const url = isAtlas() ? generateAtlasUrl() : generateLocalUrl()
 
-  if (env.MONGO_PARAMS === 'mongoParams') {
-    env.MONGO_PARAMS = ''
-  }
-
-  if (protocol === 'mongodb') {
-    return `${protocol}://${env.MONGO_HOST}:${env.MONGO_PORT}/${env.MONGO_DATABASE}?${env.MONGO_PARAMS}`
-  }
-
-  if (protocol === 'mongodb+srv') {
-    return `${protocol}://${env.MONGO_USER}:${env.MONGO_PASSWORD}@${env.MONGO_CLUSTER}.8bito.mongodb.net/${env.MONGO_DATABASE}?${env.MONGO_PARAMS}`
-  }
-
-  throw new Error('Invalid Protocol')
+  return url
 }
