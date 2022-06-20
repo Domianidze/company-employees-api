@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-export default (req, _res, next) => {
+export default (req, _, next) => {
   try {
     const { authorization } = req.headers
 
